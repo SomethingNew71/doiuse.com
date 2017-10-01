@@ -1,42 +1,38 @@
+<hr>
 <section class="results">
-  <aside>
-    <div class="input-size">Read {{size}} bytes of CSS.</div>
-    <a id="json-link" href="{{json}}" title="because machines are people too.">
+  <aside class="content">
+    <h3>Results:</h3>
+    <p class="input-size">Read {{size}} bytes of CSS.</p>
+    <p><a id="json-link" href="{{json}}" title="because machines are people too.">
       Gimme JSON
-    </a>
+    </a></p>
   </aside>
-  <header>
-    <div class="feature">
-      Feature <span class="count">count</span>
-    </div>
-    <div class="browsers">
-      Browsers Missing Support
-    </div>
-    <div class="source">
-      Example (from your source)
-    </div>
-  </header>
-  <ul id="features">
+
+  <div class="box" id="features">
     {{#usages}}
-    <li class="feature-usage">
-      <div class="feature">
-        <a href="http://caniuse.com/{{feature}}" title="caniuse.com info for {{feature}}"
-        target="_blank">{{title}}</a>
-        <span class="count">{{count}}</span>
+    <article class="media">
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>{{title}}</strong> - <small class="has-text-danger">Errors</small> <small class="has-text-danger">{{count}}</small>
+            <br> {{#source}}
+            <pre><code class="language-css">{{content}}</code></pre> {{/source}}
+          </p>
+          <ul>
+            {{#missing}}
+            <li>{{browser}} {{versions}}</li>
+            {{/missing}}
+          </ul>
+        </div>
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" href="http://caniuse.com/{{feature}}" title="caniuse.com info for {{feature}}" target="_blank">
+              {{title}}
+            </a>
+          </div>
+        </nav>
       </div>
-      <div class="browsers">
-        <ul>
-          {{#missing}}
-          <li>{{browser}} {{versions}}</li>
-          {{/missing}}
-        </ul>
-      </div>
-      <div class="source">
-        {{#source}}
-        <pre><code class="language-css">{{content}}</code></pre>
-        {{/source}}
-      </div>
-    </li>
+    </article>
     {{/usages}}
-  </ul>
+  </div>
 </section>

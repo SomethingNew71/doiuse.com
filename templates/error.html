@@ -1,15 +1,28 @@
-<aside class="error">
-  There was an error -- shocking, I know.  If you've got a minute,
-  please <a href="https://github.com/anandthakker/doiuse.com/issues">report it!</a>
-  <div>
-    {{#args}}
-    <h3>Request Arguments</h3>
-    <pre>{{args}}</pre>
-    {{/args}}
-    <h3>Error</h3>
-    <pre>{{message}}</pre>
-    {{#error.stack}}
-    <pre>{{error.stack}}</pre>
-    {{/error.stack}}
-  </div>
-</aside>
+<div class="box" id="features">
+  {{#usages}}
+  <article class="media">
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>There was an Error!</strong> - <small class="has-text-danger">Errors</small> <small class="has-text-danger">{{count}}</small>
+        </p>
+        <p>
+          {{#args}}
+          <h3>Request Arguments</h3>
+          <pre>{{args}}</pre> {{/args}}
+        </p>
+        <p>
+          <h3>Error</h3>
+          <pre>{{message}}</pre> {{#error.stack}}
+          <pre>{{error.stack}}</pre> {{/error.stack}}
+        </p>
+      </div>
+      <nav class="level is-mobile">
+        <div class="level-left">
+          <a href="https://github.com/anandthakker/doiuse.com/issues">Report it!</a>
+        </div>
+      </nav>
+    </div>
+  </article>
+  {{/usages}}
+</div>

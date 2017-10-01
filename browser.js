@@ -16,7 +16,7 @@ var templates = {
 
 // shorthand
 var $ = document.querySelector.bind(document)
-$.remove = function (el) {
+$.remove = function(el) {
   if (typeof el === 'string') el = $(el)
   if (!el) return
   el.parentNode.removeChild(el)
@@ -24,7 +24,6 @@ $.remove = function (el) {
 
 // elements
 var button = $('button')
-var loading = $('.loading')
 
 var input = {
   url: $('[name="url"]'),
@@ -33,26 +32,29 @@ var input = {
 }
 
 // onload
-document.addEventListener('DOMContentLoaded', function () {
-  $('.fouc').classList.remove('fouc')
+document.addEventListener('DOMContentLoaded', function() {
+  $('body').classList
 
   // watch for changes in the input fields.
-  ;[
+  ;
+  [
     input.url,
     input.css,
     input.browsers
-  ].forEach(function (el) {
+  ].forEach(function(el) {
     el.addEventListener('keyup', validate)
     el.addEventListener('blur', validate)
   })
 
   // handle click & enter key field
-  button.addEventListener('click', function (e) { fetch() })
-  ;[
+  button.addEventListener('click', function(e) {
+    fetch()
+  });
+  [
     input.url,
     input.browsers
-  ].forEach(function (el) {
-    el.addEventListener('keyup', function (e) {
+  ].forEach(function(el) {
+    el.addEventListener('keyup', function(e) {
       if (e.keyCode === 13) fetch()
     })
   })
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(args)
   }
 
-  function validate () {
+  function validate() {
     var urlvalue = input.url.value.trim()
     var cssvalue = input.css.value.trim()
     if (/\./.test(urlvalue) ? !cssvalue.length : cssvalue.length) {
@@ -73,10 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function fetch (args) {
+  function fetch(args) {
     if (button.getAttribute('disabled')) return
 
-    loading.classList.add('show')
+    button.classList.add('is-loading')
     $.remove('.error')
     $.remove('.results')
     $.remove('.nolint')
@@ -90,44 +92,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     xhr({
-      body: JSON.stringify(args),
-      method: 'POST',
-      uri: '/',
-      headers: { 'Content-Type': 'application/json' }
-    },
-      function (err, resp, body) {
+        body: JSON.stringify(args),
+        method: 'POST',
+        uri: '/',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      function(err, resp, body) {
         try {
           if (!(resp.statusCode >= 200 && resp.statusCode < 400)) {
             throw new Error('The server responded with a bad status: ' + resp.statusCode)
           }
           body = JSON.parse(body)
-        } catch (e) { err = e }
+        } catch (e) {
+          err = e
+        }
         body = body || resp
         body.args = body.args || args
         update(err, body)
       })
   }
 
-  function update (err, response, skipHistory) {
-    loading.classList.remove('show')
+  function update(err, response, skipHistory) {
+    button.classList.remove('is-loading')
 
     err = err ? [err] : response.errors
     console.log(err)
-    var errorMarkup = err.map(function (err) {
+    var errorMarkup = err.map(function(err) {
       return mustache.render(templates.error, {
         message: JSON.stringify(err, null, 2),
         args: response && JSON.stringify(response.args, null, 2),
         error: err
       })
     })
-    loading.insertAdjacentHTML('beforebegin', errorMarkup)
+    button.insertAdjacentHTML('afterend', errorMarkup)
 
     if (response && response.usages) {
       if (response.usages.length) {
-        response.usages.forEach(function (usage) {
+        response.usages.forEach(function(usage) {
           usage.count = response.counts[usage.feature]
         })
-        loading.insertAdjacentHTML('beforebegin', mustache.render(templates.results, response))
+        button.insertAdjacentHTML('afterend', mustache.render(templates.results, response))
         prism.highlightAll()
       } else {
         var nolint = mustache.render(templates.nolint, response)
@@ -147,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  window.addEventListener('popstate', function (event) {
+  window.addEventListener('popstate', function(event) {
     update(null, event.state)
   })
 }) // DOMContentLoaded
